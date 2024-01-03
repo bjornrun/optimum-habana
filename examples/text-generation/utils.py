@@ -293,7 +293,14 @@ def setup_tokenizer(args, model):
         tokenizer.pad_token = tokenizer.decode(tokenizer.pad_token_id)
         tokenizer.eos_token = tokenizer.decode(tokenizer.eos_token_id)
         tokenizer.bos_token = tokenizer.decode(tokenizer.bos_token_id)
-
+    if model is gpt-sw3: 
+        try:
+            tokenizer.model_input_names.remove('token_type_ids')
+        except ValueError:
+            pass
+        if modality is chat:
+            model.generation_config.eos_token_id = model.generation_config.bos_token_id
+      
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
         model.generation_config.pad_token_id = model.generation_config.eos_token_id
